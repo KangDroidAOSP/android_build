@@ -140,6 +140,11 @@ ifdef LOCAL_SDK_VERSION
   endif
 endif
 
+ifdef SM_VENDOR
+  # Include sabermod build system configs
+  include $(SM_VENDOR)/build/sm.mk
+endif
+
 # MinGW spits out warnings about -fPIC even for -fpie?!) being ignored because
 # all code is position independent, and then those warnings get promoted to
 # errors.
@@ -1052,9 +1057,26 @@ installed_static_library_notice_file_targets := \
     $(foreach lib,$(my_static_libraries) $(my_whole_static_libraries), \
       NOTICE-$(if $(LOCAL_IS_HOST_MODULE),HOST,TARGET)-STATIC_LIBRARIES-$(lib))
 
-# Default is -fno-rtti.
-ifeq ($(strip $(LOCAL_RTTI_FLAG)),)
-LOCAL_RTTI_FLAG := -fno-rtti
+ifeq (,$(filter 5.2% 6.0%,$(SM_AND_NAME)))
+
+  # Default is -fno-rtti.
+  ifeq ($(strip $(LOCAL_RTTI_FLAG)),)
+    LOCAL_RTTI_FLAG := -fno-rtti
+  endif
+else
+  ifeq (,($(filter $(GCC_4_8_MODULES) $(GCC_4_9_MODULES),$(LOCAL_MODULE))))
+
+    # Default is -frtti.
+    ifeq ($(strip $(LOCAL_RTTI_FLAG)),)
+      LOCAL_RTTI_FLAG := -frtti
+    endif
+  else
+
+    # Default is -fno-rtti.
+    ifeq ($(strip $(LOCAL_RTTI_FLAG)),)
+      LOCAL_RTTI_FLAG := -fno-rtti
+    endif
+  endif
 endif
 
 ###########################################################
