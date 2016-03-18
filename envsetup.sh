@@ -865,7 +865,6 @@ function mm()
         local M=$(findmakefile)
         local MODULES=
         local GET_INSTALL_PATH=
-        local ARGS=
         # Remove the path to top as the makefilepath needs to be relative
         local M=`echo $M|sed 's:'$T'/::'`
         if [ ! "$T" ]; then
@@ -882,12 +881,12 @@ function mm()
             done
             if [ -n "$GET_INSTALL_PATH" ]; then
               MODULES=
-              ARGS=GET-INSTALL-PATH
+              # set all args to 'GET-INSTALL-PATH'
+              set -- GET-INSTALL-PATH
             else
               MODULES=all_modules
-              ARGS=$@
             fi
-            ONE_SHOT_MAKEFILE=$M $DRV make -C $T -f build/core/main.mk $MODULES $ARGS
+            ONE_SHOT_MAKEFILE=$M $DRV make -C $T -f build/core/main.mk $MODULES "$@"
         fi
     fi
 }
@@ -903,7 +902,7 @@ function mmm()
         local DIR TO_CHOP
         local GET_INSTALL_PATH=
 
-        if [ "$(__detect_shell)" == "zsh" ]; then
+        if [ "$(__detect_shell)" = "zsh" ]; then
             set -lA DASH_ARGS $(echo "$@" | awk -v RS=" " -v ORS=" " '/^-.*$/')
             set -lA DIRS $(echo "$@" | awk -v RS=" " -v ORS=" " '/^[^-].*$/')
         else
@@ -973,7 +972,7 @@ function mmma()
   local T=$(gettop)
   local DRV=$(getdriver $T)
   if [ "$T" ]; then
-    if [ "$(__detect_shell)" == "zsh" ]; then
+    if [ "$(__detect_shell)" = "zsh" ]; then
         set -lA DASH_ARGS $(echo "$@" | awk -v RS=" " -v ORS=" " '/^-.*$/')
         set -lA DIRS $(echo "$@" | awk -v RS=" " -v ORS=" " '/^[^-].*$/')
     else
@@ -1833,7 +1832,7 @@ function makerecipe() {
 
   repo forall -c '
 
-  if [ "$REPO_REMOTE" == "github" ]
+  if [ "$REPO_REMOTE" = "github" ]
   then
     pwd
     cmremote
@@ -1844,7 +1843,7 @@ function makerecipe() {
 
 function cmgerrit() {
 
-    if [ "$(__detect_shell)" == "zsh" ]; then
+    if [ "$(__detect_shell)" = "zsh" ]; then
         # zsh does not define FUNCNAME, derive from funcstack
         local FUNCNAME=$funcstack[1]
     fi
@@ -2239,7 +2238,7 @@ function dopush()
         echo "Device Found."
     fi
 
-    if (adb shell getprop ro.kdp.device | grep -q "$CM_BUILD") || [ "$FORCE_PUSH" == "true" ];
+    if (adb shell getprop ro.kdp.device | grep -q "$CM_BUILD") || [ "$FORCE_PUSH" = "true" ];
     then
     # retrieve IP and PORT info if we're using a TCP connection
     TCPIPPORT=$(adb devices | egrep '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+:[0-9]+[^0-9]+' \
