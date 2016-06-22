@@ -86,7 +86,12 @@ endif
 ifdef    POLLY_OPTIMIZATION
 $(info ${CLR_MAG}   POLLY_OPTIMIZATION=$(POLLY_OPTIMIZATION))
 else
-$(info   POLLY_OPTIMIZATION=true)
+$(info ${CLR_MAG}   POLLY_OPTIMIZATION=true)
+endif
+ifdef    ENABLE_SANITIZE
+$(info ${CLR_MAG}   ENABLE_SANITIZE=$(ENABLE_SANITIZE))
+else
+$(info ${CLR_MAG}   ENABLE_SANITIZE=true)
 endif
 $(info   HOST_ARCH=$(HOST_ARCH))
 $(info   HOST_OS=$(HOST_OS))

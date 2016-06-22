@@ -255,6 +255,8 @@ DISABLE_SANITIZE_LEAK := \
 # Cortex Tuning
 ################
 LOCAL_DISABLE_CORTEX := \
+	libc_dns \
+	libc_tzcode \
 	bluetooth.default 
 
 ifeq (arm,$(TARGET_ARCH))
