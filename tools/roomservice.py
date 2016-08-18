@@ -51,7 +51,7 @@ except:
     device = product
 
 if not depsonly:
-    print("Device %s not found. Attempting to retrieve device repository from KangDroid Github (http://github.com/KangDroid)." % device)
+    print("Device %s not found. Attempting to retrieve device repository from Hexa-Project Device Github (http://github.com/Hexa-Project-Device)." % device)
 
 repositories = []
 
@@ -71,7 +71,7 @@ def add_auth(githubreq):
         githubreq.add_header("Authorization","Basic %s" % githubauth)
 
 if not depsonly:
-    githubreq = urllib.request.Request("https://api.github.com/search/repositories?q=%s+user:KangDroid+in:name+fork:true" % device)
+    githubreq = urllib.request.Request("https://api.github.com/search/repositories?q=%s+user:Hexa-Project-Device+in:name+fork:true" % device)
     add_auth(githubreq)
     try:
         result = json.loads(urllib.request.urlopen(githubreq).read().decode())
@@ -175,12 +175,12 @@ def add_to_manifest(repositories, fallback_branch = None):
         repo_target = repository['target_path']
         print('Checking if %s is fetched from %s' % (repo_target, repo_name))
         if is_in_manifest(repo_target):
-            print('KangDroidAOSP/%s already fetched to %s' % (repo_name, repo_target))
+            print('Hexa-Project-Device/%s already fetched to %s' % (repo_name, repo_target))
             continue
 
-        print('Adding dependency: KangDroid/%s -> %s' % (repo_name, repo_target))
+        print('Adding dependency: Hexa-Project-Device/%s -> %s' % (repo_name, repo_target))
         project = ElementTree.Element("project", attrib = { "path": repo_target,
-            "remote": "github", "name": "KangDroid/%s" % repo_name })
+            "remote": "github", "name": "Hexa-Project-Device/%s" % repo_name })
 
         if 'branch' in repository:
             project.set('revision',repository['branch'])
@@ -294,4 +294,4 @@ else:
             print("Done")
             sys.exit()
 
-print("Repository for %s not found in the KangDroid Github repository list. If this is in error, you may need to manually add it to your local_manifests/roomservice.xml." % device)
+print("Repository for %s not found in the Hexa-Project Github repository list. If this is in error, you may need to manually add it to your local_manifests/roomservice.xml." % device)
